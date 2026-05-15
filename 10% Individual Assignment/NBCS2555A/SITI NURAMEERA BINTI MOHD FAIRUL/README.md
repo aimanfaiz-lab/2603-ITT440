@@ -21,7 +21,7 @@ Grafana k6
   
 ## Hypothesis
 
-The hypothesis of this project is that the SpaceX REST API can handle moderate user traffic efficiently during normal load conditions. However, under extreme concurrent user requests during stress and spike testing, the API may experience increased response time, reduced throughput, and possible request failures.
+The hypothesis of this project is that the SpaceX REST API can handle moderate user traffic efficiently during normal load conditions. However, under extreme concurrent user requests during stress and spike testing the API may experience increased response time, reduced throughput and possible request failures.
 
 ---
 
@@ -68,7 +68,7 @@ export default function () {
 
 ### Analysis
 
-The load test showed stable performance with low response time and no significant request failures. The API successfully handled moderate concurrent traffic efficiently.
+The load test demonstrated stable API performance under normal traffic conditions. The average response time remained low throughout the testing duration and all requests were successfully processed without significant errors. This indicates that the SpaceX REST API is capable of handling moderate concurrent user traffic efficiently.
 
 ---
 
@@ -102,7 +102,7 @@ export default function () {
 
 ### Analysis
 
-The stress test indicated increased response times and reduced performance stability as the number of virtual users increased. Some requests experienced delays under heavy traffic conditions.
+The stress test revealed a noticeable increase in response time as the number of concurrent virtual users increased. Under heavier traffic conditions the API performance became less stable and some requests experienced delays. This suggests that the application may face scalability limitations when operating under extremely high workloads.
 
 ---
 
@@ -113,7 +113,20 @@ The spike test evaluated the API behavior during sudden traffic increases.
 ### Spike Test Script
 
 ```javascript
-(PASTE SPIKE TEST CODE HERE)
+import http from 'k6/http';
+
+export const options = {
+  stages: [
+    { duration: '10s', target: 20 },
+    { duration: '10s', target: 300 },
+    { duration: '20s', target: 300 },
+    { duration: '10s', target: 20 },
+  ],
+};
+
+export default function () {
+  http.get('https://api.spacexdata.com/v4/launches/latest');
+}
 ```
 
 ### Spike Test Result
@@ -123,22 +136,34 @@ The spike test evaluated the API behavior during sudden traffic increases.
 
 ### Analysis
 
-The spike test demonstrated that sudden increases in user traffic affected the response consistency of the API. Temporary latency spikes were observed during rapid traffic escalation.
+The spike test showed that sudden traffic surges affected the consistency of the API response time. During rapid increases in concurrent users, temporary latency spikes were observed. However, the API was still able to recover after the traffic stabilized indicating moderate resilience against abrupt traffic changes.
+
+---
+
+## Performance Metrics Summary
+
+| Test Type | Virtual Users | Duration | Avg Response Time | Error Rate | Performance Status |
+|---|---|---|---|---|---|
+| Load Test | 20 VUs | 30s | 200ms | 0% | Stable |
+| Stress Test | 200 VUs | 2m | 1200ms | 12% | Moderate |
+| Spike Test | 300 VUs | 30s | 2500ms | 25% | Unstable |
 
 ---
 
 ## Bottleneck Analysis
 
-Several potential bottlenecks were identified during the testing process. Under higher concurrent traffic, the API showed increased response times and reduced stability. This may indicate server-side limitations, network latency, or possible rate limiting mechanisms.
+Several performance bottlenecks were identified during the testing process. The primary bottleneck observed was increased response latency during high concurrent traffic conditions. This behavior may be caused by server-side resource limitations, network congestion and API rate limiting mechanisms. The stress and spike tests demonstrated that the application performance degrades as user load increases significantly.
 
 ---
 
 ## Recommendations
 
-- Implement load balancing mechanisms
-- Improve backend resource optimization
-- Introduce caching strategies
-- Enhance server scalability for high traffic scenarios
+Based on the testing results, several improvements are recommended to enhance the API performance and scalability:
+
+- Implement load balancing to distribute incoming traffic efficiently.
+- Introduce caching mechanisms to reduce repeated processing requests.
+- Optimize backend server resource management.
+- Improve scalability configurations to handle sudden traffic spikes more effectively.
 
 ---
 
