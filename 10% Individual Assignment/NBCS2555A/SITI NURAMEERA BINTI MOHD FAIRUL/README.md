@@ -142,11 +142,16 @@ The spike test showed that sudden traffic surges affected the consistency of the
 
 ## Performance Metrics Summary
 
-| Test Type | Virtual Users | Duration | Avg Response Time | Error Rate | Performance Status |
-|---|---|---|---|---|---|
-| Load Test | 20 VUs | 30s | 200ms | 0% | Stable |
-| Stress Test | 200 VUs | 2m | 1200ms | 12% | Moderate |
-| Spike Test | 300 VUs | 30s | 2500ms | 25% | Unstable |
+| Test Type | Virtual Users | Duration | Performance Observation |
+|---|---|---|---|
+| Load Test | 20 VUs | 30s | Stable performance under moderate traffic |
+| Stress Test | Up to 200 VUs | 120s | Increased response time under heavy load |
+| Spike Test | Spike to 300 VUs | 50s | Temporary latency spike during sudden traffic increase |
+
+---
+
+## Video Demonstration
+(link youtube)
 
 ---
 
