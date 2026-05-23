@@ -302,7 +302,7 @@ export const options = {
 
 ## 🎥 Demo Video
 
-▶️ [Watch on YouTube](PASTE_YOUR_YOUTUBE_LINK_HERE)
+▶️ [Watch on YouTube](https://youtu.be/-rqoxLLtM0s)
 
 The video shows me installing k6, running the three tests, and explaining the results.
 
