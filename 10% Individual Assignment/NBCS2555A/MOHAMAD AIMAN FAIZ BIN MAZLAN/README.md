@@ -20,108 +20,119 @@
 
 # 1. Project Overview
 
-This project evaluates how an API behaves under different levels of traffic using **k6 performance testing tool**.
+This project evaluates how a public API behaves under different levels of concurrent user load using the **k6 performance testing tool**.
 
-Instead of only checking whether the API works, the focus is on how it performs under real conditions such as normal usage, stress load, and failure responses.
+The focus is not only whether the API works, but how it performs under real-world conditions such as normal usage, stress load, and failure simulation.
 
-The results are collected using **InfluxDB** and visualized in **Grafana dashboards**.
-
----
-
-# 2. Objective
-
-The main objective is to understand HTTP performance behavior under concurrent access.
-
-This includes:
-- Response time behavior under load  
-- Throughput changes  
-- Failure handling  
-- System stability observation  
+All results are collected using **InfluxDB** and visualized through **Grafana dashboards**.
 
 ---
 
-# 3. Tools Used
+# 2. Problem Statement
 
-- k6 → Load testing engine  
+Modern APIs must handle multiple concurrent users efficiently.
+
+However, under increasing load, systems may experience:
+
+- Increased response time  
+- Reduced throughput  
+- Higher error rates  
+- Performance instability  
+
+This project investigates these behaviors using structured performance testing.
+
+---
+
+# 3. Objectives
+
+- Evaluate HTTP response performance under concurrent load  
+- Measure response time, throughput, and failure behavior  
+- Identify performance bottlenecks  
+- Observe system stability under stress  
+- Visualize metrics using Grafana  
+
+---
+
+# 4. Tools Used
+
+- k6 → Performance testing engine  
 - Grafana → Visualization dashboard  
 - InfluxDB → Metrics storage  
-- Docker → Container runtime  
-- httpbin.org → Test API  
+- Docker → Container environment  
+- httpbin.org → Public API test target  
 
 ---
 
-# 4. System Flow
+# 5. System Architecture
 
 ```
 k6 → httpbin API → InfluxDB → Grafana
 ```
 
-This flow allows real-time monitoring of test execution results.
+This pipeline enables real-time monitoring of API performance during execution.
 
 ---
 
-# 5. Test Scenarios & Results
+# 6. Test Scenarios
 
----
-
-## 🟢 5.1 Baseline Throughput Test
+## 🟢 Baseline Throughput Test
 
 - Endpoint: `/get`  
-- Users: 30 VUs  
+- Virtual Users: 30  
 - Duration: 1 minute  
 
 ### Purpose
-To measure normal API performance under expected usage.
+Measure normal API performance under expected usage.
 
-### Result
+### Observation
 - Stable response time  
-- No failed requests  
+- No errors  
 - Consistent throughput  
 
-### 📸 Evidence
+📸 Evidence  
 ![Baseline Test](screenshots/baseline.png)
 
 ---
 
-## 🟠 5.2 Latency Stress Test
+## 🟠 Latency Stress Test
 
 - Endpoint: `/delay/2`  
-- Users: 0 → 60 VUs  
+- Virtual Users: 0 → 60  
 - Duration: 2 minutes  
 
 ### Purpose
-To observe performance under delayed response conditions and increasing traffic.
+Simulate delayed responses and increasing traffic.
 
-### Result
+### Observation
 - Response time increases under load  
-- Latency spikes detected  
+- Latency spikes at high VUs  
 - System remains stable  
 
-### 📸 Evidence
+📸 Evidence  
 ![Latency Test](screenshots/latency.png)
 
 ---
 
-## 🔴 5.3 Failure Behavior Test
+## 🔴 Failure Behavior Test
 
 - Endpoint: `/status/500`  
-- Users: 25 VUs  
+- Virtual Users: 25  
 - Duration: 1 minute  
 
 ### Purpose
-To test system behavior under server error conditions.
+Test system behavior under server error conditions.
 
-### Result
-- HTTP 500 handled correctly  
-- No system crash  
-- Stable execution  
+### Observation
+- HTTP 500 responses handled correctly  
+- No crash observed  
+- System remains stable  
 
-### 📸 Evidence
+📸 Evidence  
 ![Failure Test](screenshots/failure.png)
 
 ---
 
-# 6. How to Run the Test
+# 7. How to Run the Test
 
 ```bash
 $env:K6_OUT="influxdb=http://localhost:8086/k6"
@@ -132,56 +143,56 @@ All scenarios are already configured inside `script.js`.
 
 ---
 
-# 7. k6 Script Summary
+# 8. k6 Script Summary
 
-The script contains:
+The test script contains 3 scenarios:
 - Baseline Throughput Test  
 - Latency Stress Test  
 - Failure Behavior Test  
 
-Each scenario simulates different real-world traffic conditions.
+Each scenario simulates real-world API traffic conditions.
 
 ---
 
-# 8. Results Summary
+# 9. Results Summary
 
 | Test | Observation |
 |------|-------------|
 | 🟢 Baseline | Stable performance, no errors |
 | 🟠 Latency | Higher response time under load |
-| 🔴 Failure | Correct error handling |
+| 🔴 Failure | Correct HTTP 500 handling |
 
 ---
 
-# 9. Key Findings
+# 10. Key Findings
 
-- API is stable under normal conditions  
-- No request failures observed  
-- Response time increases with load  
-- Tail latency is present under stress  
-- System handles up to 60 concurrent users  
+- API is stable under normal load
+- Performance decreases under stress conditions
+- Latency spikes appear under high concurrency
+- No system failure detected
+- System handled up to 60 concurrent users successfully  
 
 ---
 
-# 10. Issues Observed
+# 11. Issues Observed
 
 - Response time inconsistency under load  
 - Latency spikes during stress test  
-- No clear system breaking point identified  
+- No clear system breaking point reached  
 
 ---
 
-# 11. Recommendations
+# 12. Recommendations
 
 - Implement caching to reduce latency  
-- Use load balancing for traffic scaling  
-- Optimize backend response handling  
-- Add rate limiting for spike protection  
-- Expand testing beyond 60 users for deeper analysis  
+- Improve backend response optimization
+- Use load balancing for scalability
+- Add rate limiting for traffic spikes
+- Increase test range beyond 60 users for deeper analysis
 
 ---
 
-# 12. System Evidence (Full Execution Proof)
+# 13. System Evidence (Full Execution Proof)
 
 ## 🐳 Docker Containers Running
 ![Docker](screenshots/docker.png)
@@ -215,48 +226,28 @@ Shows consistency of results during repeated execution.
 
 ---
 
-# 13. Conclusion
+# 14. Conclusion
 
-This project successfully demonstrates API performance behavior under different traffic conditions.
+This project demonstrates that API performance is not only about successful responses.
 
-The main takeaway is that:
-> Even when an API looks stable, stress testing reveals hidden performance differences.
+> Even when an API is stable, performance bottlenecks can still appear under concurrent load.
 
-This is why proper load testing is important before deploying real systems.
+The main limitation identified is latency under stress conditions, not system failure.
 
 ---
 
-# 14. Video Demonstration
+# 15. Video Demonstration
 
 👉 https://youtube.com/
 
 ---
 
-# 📌 Repository Structure
-
-```
-ITT440-Performance-Testing/
-│
-├── script.js
-├── README.md
-└── screenshots/
-    ├── baseline.png
-    ├── latency.png
-    ├── failure.png
-    ├── docker.png
-    ├── k6-result.png
-    ├── grafana.png
-    └── retest.png
-```
-
----
-
 # ⭐ Final Note
 
-This project integrates:
-- Real API testing
-- Load simulation using k6
-- Metrics storage using InfluxDB
-- Visualization using Grafana
+This project integrates real performance engineering tools:
+- k6 for load testing
+- Grafana for visualization
+- InfluxDB for metrics storage
+- Docker for environment setup
 
-All results are based on real-time execution data.
+All results are based on real execution data from a public API.
