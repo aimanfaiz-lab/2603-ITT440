@@ -20,43 +20,43 @@
 
 # 1. Project Overview
 
-This project evaluates how a public API behaves under different levels of concurrent user load using the **k6 performance testing tool**.
+This project evaluates the performance behavior of a public API under different levels of concurrent user load using the **k6 performance testing tool**.
 
-The focus is not only whether the API works, but how it performs under real-world conditions such as normal usage, stress load, and failure simulation.
+The objective is not only to verify API functionality, but to analyze how the system behaves under normal, stress, and failure conditions.
 
-All results are collected using **InfluxDB** and visualized through **Grafana dashboards**.
+All performance metrics are collected using **InfluxDB** and visualized through **Grafana dashboards**.
 
 ---
 
 # 2. Problem Statement
 
-Modern APIs must handle multiple concurrent users efficiently.
+Modern APIs must handle concurrent requests efficiently.
 
-However, under increasing load, systems may experience:
+However, under increasing traffic, systems may experience:
 
 - Increased response time  
 - Reduced throughput  
 - Higher error rates  
 - Performance instability  
 
-This project investigates these behaviors using structured performance testing.
+This project investigates these behaviors through structured performance testing.
 
 ---
 
 # 3. Objectives
 
 - Evaluate HTTP response performance under concurrent load  
-- Measure response time, throughput, and failure behavior  
+- Measure response time and throughput  
 - Identify performance bottlenecks  
-- Observe system stability under stress  
-- Visualize metrics using Grafana  
+- Analyze system stability under stress  
+- Visualize performance metrics using Grafana  
 
 ---
 
 # 4. Tools Used
 
 - k6 → Performance testing engine  
-- Grafana → Visualization dashboard  
+- Grafana → Data visualization  
 - InfluxDB → Metrics storage  
 - Docker → Container environment  
 - httpbin.org → Public API test target  
@@ -69,7 +69,7 @@ This project investigates these behaviors using structured performance testing.
 k6 → httpbin API → InfluxDB → Grafana
 ```
 
-This pipeline enables real-time monitoring of API performance during execution.
+This pipeline enables real-time monitoring of test execution results.
 
 ---
 
@@ -82,11 +82,11 @@ This pipeline enables real-time monitoring of API performance during execution.
 - Duration: 1 minute  
 
 ### Purpose
-Measure normal API performance under expected usage.
+To measure normal API performance under expected traffic conditions.
 
 ### Observation
 - Stable response time  
-- No errors  
+- No request failures  
 - Consistent throughput  
 
 📸 Evidence  
@@ -101,11 +101,11 @@ Measure normal API performance under expected usage.
 - Duration: 2 minutes  
 
 ### Purpose
-Simulate delayed responses and increasing traffic.
+To simulate delayed responses and increasing concurrent load.
 
 ### Observation
 - Response time increases under load  
-- Latency spikes at high VUs  
+- Latency spikes observed at higher VUs  
 - System remains stable  
 
 📸 Evidence  
@@ -120,12 +120,12 @@ Simulate delayed responses and increasing traffic.
 - Duration: 1 minute  
 
 ### Purpose
-Test system behavior under server error conditions.
+To evaluate system behavior under server error conditions.
 
 ### Observation
 - HTTP 500 responses handled correctly  
-- No crash observed  
-- System remains stable  
+- No system crash observed  
+- System remains stable under error load  
 
 📸 Evidence  
 ![Failure Test](screenshots/grafana-http-failure-rate.png)
@@ -145,12 +145,12 @@ All scenarios are already configured inside [**`script.js`**](script.js).
 
 # 8. k6 Script Summary
 
-The test script contains 3 scenarios:
+The test script includes 3 scenarios:
 - Baseline Throughput Test  
 - Latency Stress Test  
 - Failure Behavior Test  
 
-Each scenario simulates real-world API traffic conditions.
+Each scenario simulates real-world API traffic conditions under different load patterns.
 
 ---
 
@@ -158,81 +158,81 @@ Each scenario simulates real-world API traffic conditions.
 
 | Test | Observation |
 |------|-------------|
-| 🟢 Baseline | Stable performance, no errors |
-| 🟠 Latency | Higher response time under load |
-| 🔴 Failure | Correct HTTP 500 handling |
+| 🟢 Baseline | Stable performance with no failures |
+| 🟠 Latency | Increased response time under load |
+| 🔴 Failure | Proper HTTP 500 error handling |
 
 ---
 
 # 10. Key Findings
 
-- API is stable under normal load
-- Performance decreases under stress conditions
-- Latency spikes appear under high concurrency
-- No system failure detected
-- System handled up to 60 concurrent users successfully  
+- The API remains stable under normal load
+- Performance degradation occurs under stress conditions
+- Latency spikes are observed at higher concurrency levels
+- No system crash or breakdown detected
+- The system handled up to 60 concurrent virtual users successfully
 
 ---
 
 # 11. Issues Observed
 
 - Response time inconsistency under load  
-- Latency spikes during stress test  
-- No clear system breaking point reached  
+- Latency spikes during stress execution  
+- No clear system breaking point identified within test range  
 
 ---
 
 # 12. Recommendations
 
-- Implement caching to reduce latency  
-- Improve backend response optimization
-- Use load balancing for scalability
-- Add rate limiting for traffic spikes
-- Increase test range beyond 60 users for deeper analysis
+- Implement caching to reduce response latency  
+- Improve backend processing efficiency
+- Introduce load balancing for scalability
+- Apply rate limiting for traffic spikes
+- Extend testing beyond 60 virtual users for deeper analysis
 
 ---
 
-# 13. System Evidence (Full Execution Proof)
+# 13. System Evidence (Execution Proof)
 
 ## 🐳 Docker Containers Running
 ![Docker](screenshots/docker-running.png)
 
-This shows both InfluxDB and Grafana running successfully.
+Both InfluxDB and Grafana services are running successfully.
 
 ---
 
 ## ⚡ k6 Execution Output
 ![k6 Result](screenshots/k6-finished.png)
 
-This confirms all 3 test scenarios executed successfully.
+Confirms successful execution of all three test scenarios.
 
 ---
 
 ## 📊 Grafana Dashboard Overview
 ![Grafana Dashboard](screenshots/grafana-dashboard.png)
 
-Shows real-time metrics:
+Displays real-time system metrics:
 - Response time
 - Request rate
 - Error rate
-- Virtual users
+- Virtual users (VUs)
 
 ---
 
 ## 🔁 Retest Evidence
 ![Retest](screenshots/retest.png)
 
-Shows consistency of results during repeated execution.
+Shows consistency of results across multiple executions.
 
 ---
 
 # 14. Conclusion
 
-This project demonstrates that API performance is not only about successful responses.
+This project demonstrates that API performance evaluation goes beyond functional testing.
 
-> Even when an API is stable, performance bottlenecks can still appear under concurrent load.
+> Even when an API responds correctly, performance bottlenecks may still appear under concurrent load.
 
-The main limitation identified is latency under stress conditions, not system failure.
+The main limitation observed in this study is increased latency under stress conditions, rather than system failure.
 
 ---
 
@@ -244,10 +244,10 @@ The main limitation identified is latency under stress conditions, not system fa
 
 # ⭐ Final Note
 
-This project integrates real performance engineering tools:
+This project integrates key performance engineering tools:
 - k6 for load testing
 - Grafana for visualization
 - InfluxDB for metrics storage
 - Docker for environment setup
 
-All results are based on real execution data from a public API.
+All results are based on real-time execution against a live public API.
