@@ -220,7 +220,7 @@ Displays real-time system metrics:
 ---
 
 ## 🔁 Retest Evidence
-![Retest](screenshots/retest.png)
+![Retest](screenshots/k6-retest.png)
 
 Shows consistency of results across multiple executions.
 
